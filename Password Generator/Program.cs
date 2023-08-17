@@ -29,7 +29,9 @@ class Program
          |____|    (____  //____  >/____  > \______  / \___  >|___|  /
                         \/      \/      \/         \/      \/      \/ 
 
-                      All Your Might Need In One Place.
+                      Security Toolbox. No more, No Less.
+
+       \---------------------------------------------------------------/
         ");
 
         Console.ResetColor();
@@ -174,12 +176,12 @@ class Program
 
             var passMode = AnsiConsole.Prompt(
            new SelectionPrompt<string>()
-               .Title("Password:")
+               .Title("Choose way to enter the password:")
                .PageSize(10)
                .HighlightStyle(Spectre.Console.Color.Green)
                .AddChoices(new[]
                {
-                    "[[0]] Go to password generation menu",
+                    "[[0]] Generate password",
                     "[[1]] Enter password"
                }));
 
@@ -187,8 +189,9 @@ class Program
 
             switch (passMode)
             {
-                case "[[0]] Go to password generation menu":
-                    GeneratePasswordMenu();
+                case "[[0]] Generate password":
+                    password = PasswordGenerator.GeneratePassword(true, true, true, true, 50);
+                    AnsiConsole.MarkupLine($"[bold] 2. Generated password is: {password} [/]");
 
                     break;
                 case "[[1]] Enter password":
