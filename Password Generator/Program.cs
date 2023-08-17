@@ -44,7 +44,7 @@ class Program
                     "[[1]] Encrypt file",
                     "[[2]] Decrypt file",
                     "[[3]] Hashing file",
-                    "[[4]] Steganography (in development)",
+                    "[[4]] Steganography",
                     "[[5]] Digital Signature",
                     "[[99]] Exit"
                 }));
@@ -63,7 +63,7 @@ class Program
             case "[[3]] Hashing file":
                 HashFileMenu();
                 break;
-            case "[[4]] Steganography (in development)":
+            case "[[4]] Steganography":
                 SteganographyMenu();
                 break;
             case "[[5]] Digital Signature":
@@ -431,6 +431,8 @@ class Program
                 break;
 
             case "[[1]] Verifying sign":
+
+                AnsiConsole.MarkupLine($"[rapidblink red] You're now in verifying mode [/]\n");
 
                 var docPath = AnsiConsole.Prompt(
                            new TextPrompt<string>("[bold] 1. Enter the path to the document: [/]"));

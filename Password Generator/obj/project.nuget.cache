@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Co8RZpl5Ijek4+NqPIweVNkB8kbwDRYcXSRaEABKsiABL6xrTHRi+DMD8KnSEiZ9ECyZ0UdvzMTA//sAUMiItQ==",
+  "dgSpecHash": "ekI06lBv/nS5MbmErSzTWuAq7aTJMzW48JiMLvPdRiyrqkjRZxWSW4CTs2aZ1JQGzGHtyd+Q7VtyuJ95aNqlMQ==",
   "success": true,
-  "projectFilePath": "E:\\Cybersec\\TermProject\\Password Generator\\Password Generator.csproj",
+  "projectFilePath": "E:\\Cybersec\\PassGen\\Password Generator\\Password Generator.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\SpaceDimension\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\7.0.0\\microsoft.extensions.dependencyinjection.abstractions.7.0.0.nupkg.sha512",
     "C:\\Users\\SpaceDimension\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",
