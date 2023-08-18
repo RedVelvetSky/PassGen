@@ -3,44 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
 using System.Drawing.Imaging;
-using NAudio.Wave;
-using static System.Net.Mime.MediaTypeNames;
-using System.Security.Cryptography.X509Certificates;
 using Spectre.Console;
 
 namespace Implementation
 {
-    //public class PasswordGenerator
-    //{
-    //    private static readonly string LowercaseChars = "abcdefghijklmnopqrstuvwxyz";
-    //    private static readonly string UppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    //    private static readonly string NumberChars = "0123456789";
-    //    private static readonly string SpecialChars = "!@#$%^&*()-_=+=|;:,.<>?";
-
-    //    public static string GeneratePassword(bool useLowercase, bool useUppercase, bool useNumbers, bool useSpecial, int length)
-    //    {
-    //        if (length <= 0 || (!useLowercase && !useUppercase && !useNumbers && !useSpecial))
-    //        {
-    //            throw new ArgumentException("Invalid password settings.");
-    //        }
-
-    //        var charPool = new StringBuilder();
-    //        if (useLowercase)
-    //            charPool.Append(LowercaseChars);
-    //        if (useUppercase)
-    //            charPool.Append(UppercaseChars);
-    //        if (useNumbers)
-    //            charPool.Append(NumberChars);
-    //        if (useSpecial)
-    //            charPool.Append(SpecialChars);
-
-    //        var rng = new Random();
-    //        return new string(Enumerable.Repeat(0, length).Select(_ => charPool[rng.Next(charPool.Length)]).ToArray());
-    //    }
-    //}
 
     public class PasswordGenerator
     {
@@ -188,145 +156,6 @@ namespace Implementation
 
     public class ImageSteganography
     {
-        //public static void HidingTextInImage(string inputImagePath, string text)
-        //{
-        //    //string inputImagePath = @"path\to\input\image.png";
-        //    //string outputImagePath = @"path\to\output\image.png";
-
-        //    string originalFilePath = inputImagePath;
-        //    string directory = Path.GetDirectoryName(originalFilePath);
-        //    string originalFileName = Path.GetFileName(originalFilePath);
-        //    string newFileName = "hidden_" + originalFileName;
-        //    string newFilePath = Path.Combine(directory, newFileName);
-
-        //    Bitmap image = new Bitmap(inputImagePath);
-        //    //string text = "Your secret message here";
-
-        //    // Store the length of the message in the first pixel
-        //    image.SetPixel(0, 0, Color.FromArgb(text.Length, 0, 0));
-
-        //    int textIndex = 0;
-        //    for (int i = 1; i < image.Width; i++)
-        //    {
-        //        for (int j = 0; j < image.Height; j++)
-        //        {
-        //            if (textIndex < text.Length)
-        //            {
-        //                Color pixel = image.GetPixel(i, j);
-        //                char c = text[textIndex];
-        //                byte r = (byte)((pixel.R & 0xFE) | (c & 1)); // Set the least significant bit
-        //                image.SetPixel(i, j, Color.FromArgb(r, pixel.G, pixel.B));
-        //                textIndex++;
-        //            }
-        //        }
-        //    }
-
-        //    image.Save(newFilePath);
-        //}
-
-        //public static string ExtractingTextInImage(string inputImagePath)
-        //{
-        //    Bitmap image = new Bitmap(inputImagePath);
-
-        //    // Get the length of the message from the first pixel
-        //    int messageLength = image.GetPixel(0, 0).R;
-
-        //    StringBuilder sb = new StringBuilder();
-        //    int textIndex = 0;
-        //    byte currentChar = 0;
-        //    int bitIndex = 0;
-        //    for (int i = 1; i < image.Width; i++)
-        //    {
-        //        for (int j = 0; j < image.Height; j++)
-        //        {
-        //            if (textIndex < messageLength)
-        //            {
-        //                Color pixel = image.GetPixel(i, j);
-        //                byte r = pixel.R;
-        //                currentChar = (byte)(currentChar | ((r & 1) << (7 - bitIndex))); // Shift the bit to the correct position
-        //                bitIndex++;
-        //                if (bitIndex == 8) // If we have 8 bits
-        //                {
-        //                    sb.Append((char)currentChar);
-        //                    currentChar = 0;
-        //                    bitIndex = 0;
-        //                    textIndex++;
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    string hiddenText = sb.ToString();
-        //    return hiddenText;
-        //}
-
-        //public static void HidingTextInImage(string inputImagePath, string text)
-        //{
-        //    string originalFilePath = inputImagePath;
-        //    string directory = Path.GetDirectoryName(originalFilePath);
-        //    string originalFileName = Path.GetFileName(originalFilePath);
-        //    string newFileName = "hidden_" + originalFileName;
-        //    string newFilePath = Path.Combine(directory, newFileName);
-
-        //    Bitmap image = new Bitmap(inputImagePath);
-
-        //    // Store the length of the message in the first pixel
-        //    image.SetPixel(0, 0, Color.FromArgb(text.Length, 0, 0));
-
-        //    int textIndex = 0;
-        //    int bitIndex = 0;
-        //    for (int i = 1; i < image.Width && textIndex < text.Length; i++)
-        //    {
-        //        for (int j = 0; j < image.Height && textIndex < text.Length; j++)
-        //        {
-        //            Color pixel = image.GetPixel(i, j);
-        //            char c = text[textIndex];
-        //            byte r = (byte)((pixel.R & 0xFE) | ((c >> bitIndex) & 1)); // Set the least significant bit
-        //            image.SetPixel(i, j, Color.FromArgb(r, pixel.G, pixel.B));
-        //            bitIndex++;
-        //            if (bitIndex == 8) // If we have 8 bits
-        //            {
-        //                bitIndex = 0;
-        //                textIndex++;
-        //            }
-        //        }
-        //    }
-
-        //    image.Save(newFilePath, ImageFormat.Png); // Save as PNG
-        //}
-
-        //public static string ExtractingTextInImage(string inputImagePath)
-        //{
-        //    Bitmap image = new Bitmap(inputImagePath);
-
-        //    // Get the length of the message from the first pixel
-        //    int messageLength = image.GetPixel(0, 0).R;
-
-        //    StringBuilder sb = new StringBuilder();
-        //    int textIndex = 0;
-        //    byte currentChar = 0;
-        //    int bitIndex = 0;
-        //    for (int i = 1; i < image.Width && textIndex < messageLength; i++)
-        //    {
-        //        for (int j = 0; j < image.Height && textIndex < messageLength; j++)
-        //        {
-        //            Color pixel = image.GetPixel(i, j);
-        //            byte r = pixel.R;
-        //            currentChar = (byte)(currentChar | ((r & 1) << (7 - bitIndex))); // Shift the bit to the correct position
-        //            bitIndex++;
-        //            if (bitIndex == 8) // If we have 8 bits
-        //            {
-        //                sb.Append((char)currentChar);
-        //                currentChar = 0;
-        //                bitIndex = 0;
-        //                textIndex++;
-        //            }
-        //        }
-        //    }
-
-        //    string hiddenText = sb.ToString();
-        //    return hiddenText;
-        //}
 
         public enum State
         {
@@ -558,151 +387,6 @@ namespace Implementation
 
     class AudioSteganography
     {
-        //public static void Embed(string inputFilePath, string outputFilePath, string message)
-        //{
-        //    var waveReader = new WaveFileReader(inputFilePath);
-        //    var samples = new float[waveReader.Length / 4];
-        //    var waveChannel = new WaveChannel32(waveReader);
-        //    waveChannel.Read(samples, 0, (int)(waveReader.Length / 4));
-        //    waveReader.Close();
-
-        //    string binaryMessage = StringToBinary(message);
-        //    int msgLength = Math.Min(binaryMessage.Length, samples.Length);
-        //    for (int i = 0; i < msgLength; i++)
-        //    {
-        //        float hiddenData = (binaryMessage[i] - '0') * 0.01f;  // Spread the data
-        //        samples[i] += hiddenData; // Add the hidden data to the original sample
-        //    }
-
-        //    var waveWriter = new WaveFileWriter(outputFilePath, waveChannel.WaveFormat);
-        //    waveWriter.WriteSamples(samples, 0, samples.Length);
-        //    waveWriter.Close();
-        //}
-
-        //public static string Extract(string inputFilePath, int msgLength)
-        //{
-        //    var waveReader = new WaveFileReader(inputFilePath);
-        //    var samples = new float[waveReader.Length / 4];
-        //    var waveChannel = new WaveChannel32(waveReader);
-        //    waveChannel.Read(samples, 0, (int)(waveReader.Length / 4));
-        //    waveReader.Close();
-
-        //    char[] binaryMessage = new char[msgLength];
-        //    for (int i = 0; i < msgLength; i++)
-        //    {
-        //        binaryMessage[i] = (char)('0' + (int)Math.Round(samples[i] * 100)); // Retrieve the data and convert it back to a character
-        //    }
-
-        //    return BinaryToString(new string(binaryMessage));
-        //}
-
-        //private static string StringToBinary(string message)
-        //{
-        //    StringBuilder binaryMessage = new StringBuilder();
-        //    foreach (char c in message)
-        //    {
-        //        binaryMessage.Append(Convert.ToString(c, 2).PadLeft(8, '0'));
-        //    }
-        //    return binaryMessage.ToString();
-        //}
-
-        //private static string BinaryToString(string binaryMessage)
-        //{
-        //    StringBuilder text = new StringBuilder();
-        //    for (int i = 0; i < binaryMessage.Length; i += 8)
-        //    {
-        //        string byteString = binaryMessage.Substring(i, 8);
-        //        text.Append((char)Convert.ToInt32(byteString, 2));
-        //    }
-        //    return text.ToString();
-        //}
-
-        //static void Main()
-        //{
-        //    string inputFilePath = "path\\to\\your\\input.wav";
-        //    string outputFilePath = "path\\to\\your\\output.wav";
-        //    string message = "Hello, World!";  // Your hidden text message
-
-        //    Embed(inputFilePath, outputFilePath, message);
-
-        //    string extractedMessage = Extract(outputFilePath, message.Length * 8); // Each character is represented by 8 bits
-        //    Console.WriteLine("Extracted Message: " + extractedMessage);
-        //}
-
-        //const int HEADER_SIZE = 4; // 32 bits to store message length
-
-        //public static void HideMessageInAudio(string inputAudioPath, string message)
-        //{
-        //    byte[] messageBytes = Encoding.ASCII.GetBytes(message);
-        //    byte[] audioBytes = System.IO.File.ReadAllBytes(inputAudioPath);
-
-        //    int audioIndex = 44; // Skipping the header, start at the data part of the WAV file
-
-        //    // Hide message length (32 bits) in first few bytes
-        //    for (int i = 0; i < HEADER_SIZE; i++)
-        //    {
-        //        for (int j = 0; j < 8; j++)
-        //        {
-        //            byte bit = (byte)((messageBytes.Length >> (i * 8 + j)) & 1);
-        //            audioBytes[audioIndex] = (byte)((audioBytes[audioIndex] & 0xFE) | bit);
-        //            audioIndex++;
-        //        }
-        //    }
-
-        //    // Hide message
-        //    for (int i = 0; i < messageBytes.Length; i++)
-        //    {
-        //        for (int j = 0; j < 8; j++)
-        //        {
-        //            byte bit = (byte)((messageBytes[i] >> j) & 1);
-        //            audioBytes[audioIndex] = (byte)((audioBytes[audioIndex] & 0xFE) | bit);
-        //            audioIndex++;
-        //        }
-        //    }
-
-        //    string originalFilePath = inputAudioPath;
-        //    string directory = Path.GetDirectoryName(originalFilePath);
-        //    string originalFileName = Path.GetFileName(originalFilePath);
-        //    string newFileName = "hidden_" + originalFileName;
-        //    string newFilePath = Path.Combine(directory, newFileName);
-
-        //    System.IO.File.WriteAllBytes(newFilePath, audioBytes);
-        //}
-
-        //public static string ExtractMessageFromAudio(string inputAudioPath)
-        //{
-        //    byte[] audioBytes = System.IO.File.ReadAllBytes(inputAudioPath);
-
-        //    int audioIndex = 44; // Skipping the header, start at the data part of the WAV file
-
-        //    // Extract message length (32 bits) from first few bytes
-        //    int messageLength = 0;
-        //    for (int i = 0; i < HEADER_SIZE; i++)
-        //    {
-        //        for (int j = 0; j < 8; j++)
-        //        {
-        //            byte bit = (byte)(audioBytes[audioIndex] & 1);
-        //            messageLength |= (bit << (i * 8 + j));
-        //            audioIndex++;
-        //        }
-        //    }
-
-        //    byte[] messageBytes = new byte[messageLength];
-
-        //    // Extract message
-        //    for (int i = 0; i < messageLength; i++)
-        //    {
-        //        for (int j = 0; j < 8; j++)
-        //        {
-        //            byte bit = (byte)(audioBytes[audioIndex] & 1);
-        //            messageBytes[i] |= (byte)(bit << j);
-        //            audioIndex++;
-        //        }
-        //    }
-
-        //    return Encoding.ASCII.GetString(messageBytes);
-        //}
-
 
         const int HEADER_SIZE = 4; // 32 bits to store message length
         const int BYTE_INTERVAL = 16; // Change every 16th byte
@@ -792,11 +476,22 @@ namespace Implementation
             publicKey = rsa.ExportParameters(false);
             privateKey = rsa.ExportParameters(true);
             var publicKeyXml = rsa.ToXmlString(false);
+            var privateKeyXml = rsa.ToXmlString(true);
 
             var publicKeyFullPath = Path.Combine(publicKeyPath, "publicKey.xml");
+            var privateKeyFullPath = Path.Combine(publicKeyPath, "privateKey.xml");
             File.WriteAllText(publicKeyFullPath, publicKeyXml);
+            File.WriteAllText(privateKeyFullPath, privateKeyXml);
 
-            AnsiConsole.MarkupLine($"[bold green invert] RSA keys generated and public key saved to publicKey.xml [/]\n");
+            AnsiConsole.MarkupLine($"[bold green invert] RSA keys generated and keypair saved to publicKey.xml/privateKey.xml [/]\n");
+        }
+
+        public static void UploadKeys(string privateKeyPath)
+        {
+            var privateKeyXml = File.ReadAllText(privateKeyPath);
+            rsa.FromXmlString(privateKeyXml);
+
+            privateKey = rsa.ExportParameters(true);
         }
 
         public static void SignDocument(string documentPath)
@@ -872,4 +567,74 @@ namespace Implementation
         }
     }
 
+    public class AesRsaEncryption
+    {
+
+        public static void EncryptFile(string inputFilePath, string outputFilePath, RSAParameters publicKey)
+        {
+            // Generate a random symmetric key
+            using (Aes aes = Aes.Create())
+            {
+                aes.GenerateKey();
+                aes.GenerateIV();
+
+                // Encrypt the file data with the symmetric key
+                using (FileStream inputFileStream = new FileStream(inputFilePath, FileMode.Open, FileAccess.Read))
+                using (FileStream outputFileStream = new FileStream(outputFilePath, FileMode.Create, FileAccess.Write))
+                using (CryptoStream cryptoStream = new CryptoStream(outputFileStream, aes.CreateEncryptor(), CryptoStreamMode.Write))
+                {
+                    byte[] buffer = new byte[1024];
+                    int bytesRead;
+                    while ((bytesRead = inputFileStream.Read(buffer, 0, buffer.Length)) > 0)
+                    {
+                        cryptoStream.Write(buffer, 0, bytesRead);
+                    }
+                }
+
+                // Encrypt the symmetric key with the recipient's RSA public key
+                using (RSA rsa = new RSACryptoServiceProvider())
+                {
+                    rsa.ImportParameters(publicKey);
+                    byte[] encryptedKey = rsa.Encrypt(aes.Key, RSAEncryptionPadding.Pkcs1);
+
+                    // Store or transmit the encrypted symmetric key and the IV together
+                    File.WriteAllBytes(outputFilePath + ".key", encryptedKey.Concat(aes.IV).ToArray());
+                }
+            }
+        }
+
+        public static void DecryptFile(string inputFilePath, string keyFilePath, string outputFilePath, RSAParameters privateKey)
+        {
+            byte[] encryptedData = File.ReadAllBytes(keyFilePath);
+            byte[] encryptedKey = encryptedData.Take(encryptedData.Length - 16).ToArray();
+            byte[] iv = encryptedData.Skip(encryptedData.Length - 16).ToArray();
+
+            // Use the RSA private key to decrypt the symmetric key
+            using (RSA rsa = new RSACryptoServiceProvider())
+            {
+                rsa.ImportParameters(privateKey);
+                byte[] decryptedKey = rsa.Decrypt(encryptedKey, RSAEncryptionPadding.Pkcs1);
+
+                // Use the decrypted symmetric key to decrypt the file data
+                using (Aes aes = Aes.Create())
+                {
+                    aes.Key = decryptedKey;
+                    aes.IV = iv; // Use the correct IV
+
+                    using (FileStream inputFileStream = new FileStream(inputFilePath, FileMode.Open, FileAccess.Read))
+                    using (FileStream outputFileStream = new FileStream(outputFilePath, FileMode.Create, FileAccess.Write))
+                    using (CryptoStream cryptoStream = new CryptoStream(outputFileStream, aes.CreateDecryptor(), CryptoStreamMode.Write))
+                    {
+                        byte[] buffer = new byte[1024];
+                        int bytesRead;
+                        while ((bytesRead = inputFileStream.Read(buffer, 0, buffer.Length)) > 0)
+                        {
+                            cryptoStream.Write(buffer, 0, bytesRead);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
 }

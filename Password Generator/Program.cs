@@ -6,6 +6,7 @@ using Spectre.Console;
 using TextCopy;
 using Implementation;
 using System.Drawing;
+using System.Security.Cryptography.X509Certificates;
 
 class Program
 {
@@ -43,11 +44,13 @@ class Program
                 .AddChoices(new[]
                 {
                     "[[0]] Generate Password",
-                    "[[1]] Encrypt file",
-                    "[[2]] Decrypt file",
-                    "[[3]] Hashing file",
-                    "[[4]] Steganography",
-                    "[[5]] Digital Signature",
+                    "[[1]] Encrypt file (AES)",
+                    "[[2]] Decrypt file (AES)",
+                    "[[3]] Encrypt file (AES+RSA)",
+                    "[[4]] Decrypt file (AES+RSA)",
+                    "[[5]] Hashing file",
+                    "[[6]] Digital Signature",
+                    "[[7]] Steganography",
                     "[[99]] Exit"
                 }));
 
@@ -56,20 +59,26 @@ class Program
             case "[[0]] Generate Password":
                 GeneratePasswordMenu();
                 break;
-            case "[[1]] Encrypt file":
-               EncryptFileMenu();
+            case "[[1]] Encrypt file (AES)":
+               EncryptFileAESMenu();
                 break;
-            case "[[2]] Decrypt file":
+            case "[[2]] Decrypt file (AES)":
+                DecryptFileAESMenu();
+                break;
+            case "[[3]] Encrypt file (AES+RSA)":
+                EncryptFileMenu();
+                break;
+            case "[[4]] Decrypt file (AES+RSA)":
                 DecryptFileMenu();
                 break;
-            case "[[3]] Hashing file":
+            case "[[5]] Hashing file":
                 HashFileMenu();
                 break;
-            case "[[4]] Steganography":
-                SteganographyMenu();
-                break;
-            case "[[5]] Digital Signature":
+            case "[[6]] Digital Signature":
                 SignatureMenu();
+                break;
+            case "[[7]] Steganography":
+                SteganographyMenu();
                 break;
             case "[[99]] Exit":
                 AnsiConsole.Clear();
@@ -160,7 +169,7 @@ class Program
         //        }));
     }
 
-    static void EncryptFileMenu()
+    static void EncryptFileAESMenu()
     {
         //AnsiConsole.Clear();
         Encrypt encrypt = new Encrypt();
@@ -221,7 +230,7 @@ class Program
                 }));
     }
 
-    static void DecryptFileMenu()
+    static void DecryptFileAESMenu()
     {
         //AnsiConsole.Clear();
         Decrypt decrypt = new Decrypt();
@@ -421,10 +430,34 @@ class Program
                 //Console.Clear();
                 AnsiConsole.MarkupLine($"[rapidblink green] You're now in signing mode [/]\n");
 
-                var keyPath = AnsiConsole.Prompt(
-                          new TextPrompt<string>("[bold] 1. Enter the path where you want to save the publicKey.xml file: [/]"));
+                var keyGenMode = AnsiConsole.Prompt(
+           new SelectionPrompt<string>()
+               .Title("Choose variants:")
+               .PageSize(10)
+               .HighlightStyle(Spectre.Console.Color.Green)
+               .AddChoices(new[]
+               {
+                    "[[0]] Generate RSA keypair",
+                    "[[1]] Upload private key"
+               }));
 
-                DigitalSignature.GenerateKeys(keyPath);
+                switch (keyGenMode)
+                {
+                    case "[[0]] Generate RSA keypair":
+                        var keypairPath = AnsiConsole.Prompt(
+                         new TextPrompt<string>("[bold] 1. Enter the path where you want to save the keypair file: [/]"));
+                        DigitalSignature.GenerateKeys(keypairPath);
+
+                        break;
+
+                    case "[[1]] Upload private key":
+                        var privateKeyPath = AnsiConsole.Prompt(
+                        new TextPrompt<string>("[bold] 1. Enter the path to the privateKey.xml file: [/]"));
+                        DigitalSignature.UploadKeys(privateKeyPath);
+
+                        break;
+                }
+
 
                 var filePath = AnsiConsole.Prompt(
                            new TextPrompt<string>("[bold] 2. Enter the path to the file you want to sign: [/]"));
@@ -443,7 +476,7 @@ class Program
                 var sigPath = AnsiConsole.Prompt(
                            new TextPrompt<string>("[bold] 2. Enter the path to the signature you want to verify: [/]"));
 
-                keyPath = AnsiConsole.Prompt(
+                var keyPath = AnsiConsole.Prompt(
                            new TextPrompt<string>("[bold] 3. Enter the path to your publicKey.xml: [/]"));
 
                 DigitalSignature.VerifyDocumentSignature(docPath, sigPath, keyPath);
@@ -460,5 +493,82 @@ class Program
                     "Return to main menu"
                 }));
 
+    }
+
+    static void EncryptFileMenu()
+    {
+        AesRsaEncryption aesRsaEncryption = new AesRsaEncryption();
+        RSAParameters publicKey;
+
+        AnsiConsole.MarkupLine($"[rapidblink green] You're now in encryption mode [/]\n");
+
+        var keypairPath = AnsiConsole.Prompt(
+                          new TextPrompt<string>("[bold] 1. Enter the path where you want to save keypair: [/]"));
+
+        using (RSA rsa = new RSACryptoServiceProvider(2048))
+        {
+            publicKey = rsa.ExportParameters(false);
+            RSAParameters privateKey = rsa.ExportParameters(true);
+
+            var publicKeyFullPath = Path.Combine(keypairPath, "publicKey.xml");
+            var privateKeyFullPath = Path.Combine(keypairPath, "privateKey.xml");
+
+            // Save the public key and private key to files (for demonstration purposes)
+            File.WriteAllText(publicKeyFullPath, rsa.ToXmlString(false));
+            File.WriteAllText(privateKeyFullPath, rsa.ToXmlString(true));
+        }
+
+        var filePath = AnsiConsole.Prompt(
+                         new TextPrompt<string>("[bold] 2. Enter the path to the file to be encrypted: [/]"));
+
+        string encryptedFilePath = filePath + ".bin";
+        string encryptedKeyFilePath = encryptedFilePath + ".key";
+
+        // Step 2: Encrypt the file using the EncryptFile method
+        AesRsaEncryption.EncryptFile(filePath, encryptedFilePath, publicKey);
+
+        AnsiConsole.MarkupLine($"[bold green] File succesfully encrypted and saved to: {encryptedFilePath} [/]\n");
+
+        AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("Choose an action:")
+                        .PageSize(10)
+                        .AddChoices(new[]
+                        {
+                    "Return to main menu"
+                        }));
+    }
+
+    static void DecryptFileMenu()
+    {
+        AesRsaEncryption aesRsaEncryption = new AesRsaEncryption();
+        RSAParameters privateKey;
+
+        AnsiConsole.MarkupLine($"[rapidblink red] You're now in decryption mode [/]\n");
+
+        var rsaKeypairPath = AnsiConsole.Prompt(
+                         new TextPrompt<string>("[bold] 1. Enter the path to private assymetric key (.xml): [/]"));
+
+        using (RSA rsa = new RSACryptoServiceProvider())
+        {
+            rsa.FromXmlString(File.ReadAllText(rsaKeypairPath));
+            privateKey = rsa.ExportParameters(true);
+        }
+
+        var encryptedFilePath = AnsiConsole.Prompt(
+                         new TextPrompt<string>("[bold] 2. Enter the path to encrypted file (.bin): [/]"));
+
+        var encryptedKeyFilePath = AnsiConsole.Prompt(
+                         new TextPrompt<string>("[bold] 3. Enter the path to encrypted assymetric key file (.key): [/]"));
+
+        string originalExtension = Path.GetExtension(Path.GetFileNameWithoutExtension(encryptedFilePath));
+        string baseName = Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(encryptedFilePath));
+        string directoryPath = Path.GetDirectoryName(encryptedFilePath);
+        string decryptedFileName = $"{baseName}.decrypted{originalExtension}";
+        string decryptedFilePath = Path.Combine(directoryPath, decryptedFileName);
+
+        AesRsaEncryption.DecryptFile(encryptedFilePath, encryptedKeyFilePath, decryptedFilePath, privateKey);
+
+        AnsiConsole.MarkupLine($"[bold green] File succesfully encrypted and saved to: {decryptedFilePath} [/]\n");
     }
 }
