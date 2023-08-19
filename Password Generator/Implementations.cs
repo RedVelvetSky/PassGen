@@ -9,7 +9,6 @@ using Spectre.Console;
 
 namespace Implementation
 {
-
     public class PasswordGenerator
     {
         private static readonly string LowercaseChars = "abcdefghijklmnopqrstuvwxyz";
@@ -30,7 +29,7 @@ namespace Implementation
                               (useSpecial ? SpecialChars : "");
 
             var bytes = new byte[length];
-            RandomNumberGenerator.Fill(bytes);  // Use the recommended Fill method
+            RandomNumberGenerator.Fill(bytes);
             return new string(bytes.Select(b => charPool[b % charPool.Length]).ToArray());
         }
     }
@@ -40,9 +39,9 @@ namespace Implementation
         public static double CalculateStringEntropy(string input)
         {
             if (string.IsNullOrEmpty(input))
-                return 0.0;
+                return 0.0; // entropy is zero
 
-            // Step 1: Count the occurrence of each character
+            // counting the occurrence of each char
             Dictionary<char, int> charCounts = new Dictionary<char, int>();
             foreach (char c in input)
             {
@@ -52,7 +51,7 @@ namespace Implementation
                     charCounts[c] = 1;
             }
 
-            // Step 2: Compute the probabilities and then the entropy
+            // probabilities and then the entropy computing
             double entropy = 0.0;
             int totalChars = input.Length;
             foreach (var count in charCounts.Values)
@@ -61,7 +60,6 @@ namespace Implementation
                 entropy += probability * Math.Log2(probability);
             }
 
-            // Step 3: Return the negative of the computed sum
             return -entropy;
         }
     }
@@ -82,7 +80,7 @@ namespace Implementation
 
                 using (FileStream fsOutput = new FileStream(outputFile, FileMode.Create))
                 {
-                    // Write the salt first
+                    // writing the salt at the begining
                     fsOutput.Write(salt, 0, salt.Length);
 
                     using (FileStream fsInput = new FileStream(inputFile, FileMode.Open))
@@ -174,68 +172,57 @@ namespace Implementation
 
             Bitmap bmp = new Bitmap(inputImagePath);
 
-            // initially, we'll be hiding characters in the image
             State state = State.Hiding;
 
-            // holds the index of the character that is being hidden
+            // index of the character that is being hidden
             int charIndex = 0;
 
-            // holds the value of the character converted to integer
+            // value of the character converted to integer
             int charValue = 0;
 
-            // holds the index of the color element (R or G or B) that is currently being processed
+            // index of the color element (R or G or B) that is currently being processed
             long pixelElementIndex = 0;
 
-            // holds the number of trailing zeros that have been added when finishing the process
+            // number of trailing zeros that have been added when finishing the process
             int zeros = 0;
 
-            // hold pixel elements
             int R = 0, G = 0, B = 0;
 
-            // pass through the rows
             for (int i = 0; i < bmp.Height; i++)
             {
-                // pass through each row
                 for (int j = 0; j < bmp.Width; j++)
-                {
-                    // holds the pixel that is currently being processed
+                { 
                     System.Drawing.Color pixel = bmp.GetPixel(j, i);
 
-                    // now, clear the least significant bit (LSB) from each pixel element
+                    // clearing the least significant bit (LSB) from each pixel
                     R = pixel.R - pixel.R % 2;
                     G = pixel.G - pixel.G % 2;
                     B = pixel.B - pixel.B % 2;
 
-                    // for each pixel, pass through its elements (RGB)
+                    // pass through RGB
                     for (int n = 0; n < 3; n++)
                     {
-                        // check if new 8 bits has been processed
+                        // if 8 bits has been processed
                         if (pixelElementIndex % 8 == 0)
-                        {
-                            // check if the whole process has finished
-                            // we can say that it's finished when 8 zeros are added
+                        { 
+                            // finished when 8 zeros are added
                             if (state == State.Filling_With_Zeros && zeros == 8)
                             {
                                 // apply the last pixel on the image
-                                // even if only a part of its elements have been affected
                                 if ((pixelElementIndex - 1) % 3 < 2)
                                 {
                                     bmp.SetPixel(j, i, System.Drawing.Color.FromArgb(R, G, B));
                                 }
-
-                                // return the bitmap with the text hidden in
                                 bmp.Save(newFilePath, ImageFormat.Png);
                             }
 
-                            // check if all characters has been hidden
                             if (charIndex >= text.Length)
                             {
-                                // start adding zeros to mark the end of the text
+                                // zeros to mark the end of the text
                                 state = State.Filling_With_Zeros;
                             }
                             else
                             {
-                                // move to the next character and process again
                                 charValue = text[charIndex++];
                             }
                         }
@@ -247,11 +234,6 @@ namespace Implementation
                                 {
                                     if (state == State.Hiding)
                                     {
-                                        // the rightmost bit in the character will be (charValue % 2)
-                                        // to put this value instead of the LSB of the pixel element
-                                        // just add it to it
-                                        // recall that the LSB of the pixel element had been cleared
-                                        // before this operation
                                         R += charValue % 2;
 
                                         // removes the added rightmost bit of the character
@@ -288,7 +270,7 @@ namespace Implementation
 
                         if (state == State.Filling_With_Zeros)
                         {
-                            // increment the value of zeros until it is 8
+                            // incrementштп the value of zeros until it is 8
                             zeros++;
                         }
                     }
@@ -302,18 +284,15 @@ namespace Implementation
             int colorUnitIndex = 0;
             int charValue = 0;
 
-            // holds the text that will be extracted from the image
+            // text that will be extracted
             string extractedText = String.Empty;
 
-            // pass through the rows
             for (int i = 0; i < bmp.Height; i++)
             {
-                // pass through each row
                 for (int j = 0; j < bmp.Width; j++)
                 {
                     System.Drawing.Color pixel = bmp.GetPixel(j, i);
 
-                    // for each pixel, pass through its elements (RGB)
                     for (int n = 0; n < 3; n++)
                     {
                         switch (colorUnitIndex % 3)
@@ -322,9 +301,6 @@ namespace Implementation
                                 {
                                     // get the LSB from the pixel element (will be pixel.R % 2)
                                     // then add one bit to the right of the current character
-                                    // this can be done by (charValue = charValue * 2)
-                                    // replace the added bit (which value is by default 0) with
-                                    // the LSB of the pixel element, simply by addition
                                     charValue = charValue * 2 + pixel.R % 2;
                                 }
                                 break;
@@ -342,30 +318,22 @@ namespace Implementation
 
                         colorUnitIndex++;
 
-                        // if 8 bits has been added,
-                        // then add the current character to the result text
                         if (colorUnitIndex % 8 == 0)
                         {
-                            // reverse? of course, since each time the process occurs
-                            // on the right (for simplicity)
                             charValue = reverseBits(charValue);
 
-                            // can only be 0 if it is the stop character (the 8 zeros)
                             if (charValue == 0)
                             {
                                 return extractedText;
                             }
 
-                            // convert the character value from int to char
                             char c = (char)charValue;
 
-                            // add the current character to the result text
                             extractedText += c.ToString();
                         }
                     }
                 }
             }
-
             return extractedText;
         }
 
@@ -379,37 +347,35 @@ namespace Implementation
 
                 n /= 2;
             }
-
             return result;
         }
-
     }
 
     class AudioSteganography
     {
 
         const int HEADER_SIZE = 4; // 32 bits to store message length
-        const int BYTE_INTERVAL = 16; // Change every 16th byte
+        const int BYTE_INTERVAL = 16; // change every 16th byte
 
         public static void HideMessageInAudio(string inputAudioPath, string message)
         {
             byte[] messageBytes = Encoding.ASCII.GetBytes(message);
             byte[] audioBytes = File.ReadAllBytes(inputAudioPath);
 
-            int audioIndex = 44; // Skipping the header, start at the data part of the WAV file
+            int audioIndex = 44; // start at the data part of the WAV file while skipping the header (thanks to Jezek's lectures)
 
-            // Hide message length (32 bits) in first few bytes
+            // hiding message length in first few bytes
             for (int i = 0; i < HEADER_SIZE; i++)
             {
                 for (int j = 0; j < 8; j++)
                 {
                     byte bit = (byte)((messageBytes.Length >> (i * 8 + j)) & 1);
-                    audioBytes[audioIndex] = (byte)((audioBytes[audioIndex] & 0xFE) | bit);
+                    audioBytes[audioIndex] = (byte)((audioBytes[audioIndex] & 0xFE) | bit); // masking lsb and writing bit
                     audioIndex += BYTE_INTERVAL;
                 }
             }
 
-            // Hide message
+            // hiding message itself
             for (int i = 0; i < messageBytes.Length; i++)
             {
                 for (int j = 0; j < 8; j++)
@@ -433,9 +399,9 @@ namespace Implementation
         {
             byte[] audioBytes = File.ReadAllBytes(inputAudioPath);
 
-            int audioIndex = 44; // Skipping the header, start at the data part of the WAV file
+            int audioIndex = 44; // skipping the header again
 
-            // Extract message length (32 bits) from first few bytes
+            // extract message length (32 bits) from first few bytes
             int messageLength = 0;
             for (int i = 0; i < HEADER_SIZE; i++)
             {
@@ -462,7 +428,6 @@ namespace Implementation
 
             return Encoding.ASCII.GetString(messageBytes);
         }
-
     }
 
     public class DigitalSignature
@@ -502,9 +467,6 @@ namespace Implementation
                 return;
             }
 
-            //Console.WriteLine("Enter the path to the document to be signed:");
-            //var documentPath = Console.ReadLine();
-
             if (!File.Exists(documentPath))
             {
                 AnsiConsole.MarkupLine($"[bold red] File does not exist. [/]\n");
@@ -530,15 +492,6 @@ namespace Implementation
 
             var publicKeyXml = File.ReadAllText(publicKeyPath);
             rsa.FromXmlString(publicKeyXml);
-
-            //Console.WriteLine("Enter the path to the original document:");
-            //var documentPath = Console.ReadLine();
-
-            //if (!File.Exists(documentPath))
-            //{
-            //    Console.WriteLine("File does not exist.");
-            //    return;
-            //}
 
             //var signaturePath = documentPath + ".sig";
             if (!File.Exists(signaturePath))
@@ -572,13 +525,13 @@ namespace Implementation
 
         public static void EncryptFile(string inputFilePath, string outputFilePath, RSAParameters publicKey)
         {
-            // Generate a random symmetric key
+            // generating a random symmetric key
             using (Aes aes = Aes.Create())
             {
                 aes.GenerateKey();
                 aes.GenerateIV();
 
-                // Encrypt the file data with the symmetric key
+                // encrypting the file data with the symmetric key
                 using (FileStream inputFileStream = new FileStream(inputFilePath, FileMode.Open, FileAccess.Read))
                 using (FileStream outputFileStream = new FileStream(outputFilePath, FileMode.Create, FileAccess.Write))
                 using (CryptoStream cryptoStream = new CryptoStream(outputFileStream, aes.CreateEncryptor(), CryptoStreamMode.Write))
@@ -591,13 +544,13 @@ namespace Implementation
                     }
                 }
 
-                // Encrypt the symmetric key with the recipient's RSA public key
+                // encrypting the symmetric key with the recipient's RSA public key
                 using (RSA rsa = new RSACryptoServiceProvider())
                 {
                     rsa.ImportParameters(publicKey);
                     byte[] encryptedKey = rsa.Encrypt(aes.Key, RSAEncryptionPadding.Pkcs1);
 
-                    // Store or transmit the encrypted symmetric key and the IV together
+                    // encrypted symmetric key and the IV together
                     File.WriteAllBytes(outputFilePath + ".key", encryptedKey.Concat(aes.IV).ToArray());
                 }
             }
@@ -609,17 +562,17 @@ namespace Implementation
             byte[] encryptedKey = encryptedData.Take(encryptedData.Length - 16).ToArray();
             byte[] iv = encryptedData.Skip(encryptedData.Length - 16).ToArray();
 
-            // Use the RSA private key to decrypt the symmetric key
+            // RSA private key to decrypt the symmetric key
             using (RSA rsa = new RSACryptoServiceProvider())
             {
                 rsa.ImportParameters(privateKey);
                 byte[] decryptedKey = rsa.Decrypt(encryptedKey, RSAEncryptionPadding.Pkcs1);
 
-                // Use the decrypted symmetric key to decrypt the file data
+                // using decrypted symmetric key to decrypt the file data
                 using (Aes aes = Aes.Create())
                 {
                     aes.Key = decryptedKey;
-                    aes.IV = iv; // Use the correct IV
+                    aes.IV = iv;
 
                     using (FileStream inputFileStream = new FileStream(inputFilePath, FileMode.Open, FileAccess.Read))
                     using (FileStream outputFileStream = new FileStream(outputFilePath, FileMode.Create, FileAccess.Write))

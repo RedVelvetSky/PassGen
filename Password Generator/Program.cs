@@ -7,6 +7,7 @@ using TextCopy;
 using Implementation;
 using System.Drawing;
 using System.Security.Cryptography.X509Certificates;
+using Spectre.Console.Rendering;
 
 class Program
 {
@@ -92,6 +93,7 @@ class Program
         //AnsiConsole.Clear();
 
         AnsiConsole.MarkupLine($"[rapidblink green] You're now in password generating mode [/]\n");
+
 
         var length = AnsiConsole.Prompt(
                     new TextPrompt<int>("[bold] 1. Enter password length: [/]")
@@ -356,8 +358,6 @@ class Program
 
                 
                 ImageSteganography.embedText(text, filePath);
-
-                //Steganography.HidingTextInImage(filePath, text);
                 break;
 
             case "[[1]] Reading hidden text from Image (LSB, .png only)":
