@@ -100,6 +100,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Acknowledgements
 
 - Pavel Jezek's lectures
+- Martin Mares lectures
+- Roman Oleynikov lectures
+- Oksana Melnikova lectures
 - Jiri Frantal classes
 - https://stackoverflow.com/
 - https://chat.openai.com/
