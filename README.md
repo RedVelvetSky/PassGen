@@ -49,13 +49,13 @@ Security Toolbox is a .NET application that provides a suite of tools for enhanc
 1. Select "Encrypt file (AES+RSA)" from the main menu.
 2. Provide the path to the file to encrypt.
 3. Provide the RSA public key to use for encryption.
-4. Encrypt the file with the ".rsa_aes" extension.
+4. Encrypt the file with the "bin" extension.
 
 ### File Decryption (AES+RSA)
 
 1. Choose "Decrypt file (AES+RSA)" from the main menu.
 2. Enter the path to the encrypted file.
-3. Provide the RSA private key to use for decryption.
+3. Provide the RSA private key and (.bin.key) encrypted AES key to use for decryption.
 4. Decrypt the file with the original extension preceded by ".decrypted".
 
 ### File Hashing
