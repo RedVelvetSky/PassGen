@@ -18,7 +18,7 @@ Security Toolbox is a .NET application that provides a suite of tools for enhanc
 
 1. Clone the repository: git clone https://github.com/RedVelvetSky/PassGen.git
 2. Change to the project directory: cd PassGen
-3. Open the solution file (`Password Generator.sln`) with Visual Studio.
+3. Open the solution file (`SecurityToolbox.sln`) with Visual Studio.
 4. Build and run the project.
 
 ## Usage
