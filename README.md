@@ -1,6 +1,6 @@
 # Security Toolbox
 
-Security Toolbox is a .NET application that provides a suite of tools for enhancing your digital security. It includes features such as password generation, file encryption/decryption, file hashing, digital signatures, and steganography.
+Security Toolbox is a course .NET project that provides a suite of tools for enhancing your digital security. It includes features such as password generation, file encryption/decryption, file hashing, digital signatures, and steganography.
 
 ## Features
 
